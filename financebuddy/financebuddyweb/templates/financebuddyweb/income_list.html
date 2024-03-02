@@ -1,0 +1,12 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<h2>Income List</h2>
+<ul>
+    {% for income in incomes %}
+    <li>{{ income.date }}: {{ income.source }} - ${{ income.amount }}</li>
+    <a href="{% url 'edit_income' income.pk %}">Edit</a> |
+    <a href="{% url 'delete_income' income.pk %}" onclick="return confirm('Are you sure?');">Delete</a>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Additional CSS files can be included here -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Example for custom CSS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -24,6 +27,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
+
+                    <!-- Dropdown for Income -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownIncomes" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Incomes
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownIncomes">
+                            <a class="dropdown-item" href="{% url 'add_income' %}">Add Income</a>
+                            <a class="dropdown-item" href="{% url 'income_list' %}">View Incomes</a>
+                        </div>
+                    </li>
+
                     <!-- Dropdown for Expenses -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExpenses" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,6 +48,7 @@
                             <a class="dropdown-item" href="{% url 'add_expense' %}">Add Expense</a>
                             <a class="dropdown-item" href="{% url 'expenses_list' %}">View Expenses</a>
                             <a class="dropdown-item" href="{% url 'expenses_summary' %}">Expenses Summary</a>
+                            <a class="dropdown-item" href="{% url 'expenses_trends' %}">Expenses Trends</a>
                         </div>
                     </li>
 
@@ -44,6 +60,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownBudgets">
                             <a class="dropdown-item" href="{% url 'budget_add' %}">Add Budget</a>
                             <a class="dropdown-item" href="{% url 'budget_list' %}">View Budgets</a>
+                            <a class="dropdown-item" href="{% url 'budget_vs_actual' %}">View Budget Vs Spending</a>
                             <!-- Add more budget-related links here -->
                         </div>
                     </li>

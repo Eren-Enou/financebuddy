@@ -1,0 +1,44 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<h2>Budget vs. Actual Spending</h2>
+
+<canvas id="budgetVsActualChart"></canvas>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('budgetVsActualChart').getContext('2d');
+    var budgetVsActualData = {{ budget_vs_actual|safe }};
+    var labels = budgetVsActualData.map(data => data.category);
+    var budgetedData = budgetVsActualData.map(data => data.budgeted);
+    var actualData = budgetVsActualData.map(data => data.actual);
+
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Budgeted',
+                data: budgetedData,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Actual',
+                data: actualData,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

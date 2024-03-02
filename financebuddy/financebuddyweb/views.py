@@ -1,3 +1,5 @@
+import json
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.views import LogoutView
@@ -9,12 +11,14 @@ from django.http import HttpResponse
 from django.views.generic import UpdateView, DeleteView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.db.models import Sum
-from django.utils import timezone
+from django.db.models.functions import TruncMonth
+
+from django.core.serializers.json import DjangoJSONEncoder
 
 from django.utils.decorators import method_decorator
 
-from .models import Expense, Category, Budget, FinancialGoal, Expense, Account, Bill, calculate_total_savings, get_upcoming_bills, Account
-from .forms import BillForm, ExpenseForm, BudgetForm, FinancialGoalForm, AccountForm  
+from .models import Expense, Category, Budget, FinancialGoal, Expense, Account, Bill, calculate_total_savings, get_upcoming_bills, Account, Income
+from .forms import BillForm, ExpenseForm, BudgetForm, FinancialGoalForm, AccountForm, IncomeForm
 
 def homepage_view(request):
     return render(request, 'financebuddyweb/homepage.html')
@@ -78,7 +82,7 @@ def expenses_list_view(request):
     if max_amount_filter:
         expenses = expenses.filter(amount__lte=max_amount_filter)
     
-    return render(request, 'expense_list.html', {'expenses': expenses})
+    return render(request, 'financebuddyweb/expenses_list.html', {'expenses': expenses})
 
 @login_required
 def expenses_summary_view(request):
@@ -96,6 +100,20 @@ class ExpenseDeleteView(DeleteView):
     template_name = 'financebuddyweb/confirm_delete.html'
     success_url = reverse_lazy('expenses_list')  # Redirect to the expenses list after deleting
     
+def expense_trends_view(request):
+    monthly_expenses = Expense.objects.annotate(month=TruncMonth('date')).values('month').annotate(total_amount=Sum('amount')).order_by('month')
+    
+    labels = [expense['month'].strftime("%Y-%m") for expense in monthly_expenses]
+    # Convert Decimal to float for JavaScript compatibility
+    data = [float(expense['total_amount']) for expense in monthly_expenses]
+    
+    context = {
+        'labels': labels,
+        'data': data,
+    }
+    
+    return render(request, 'financebuddyweb/expenses_trends.html', context)
+
 class CustomLogoutView(LogoutView):
     template_name = 'financebuddyweb/logout.html'
     
@@ -124,6 +142,36 @@ class BudgetDeleteView(DeleteView):
     model = Budget
     template_name = 'financebuddyweb/budget_confirm_delete.html'
     success_url = reverse_lazy('budget_list')
+    
+@login_required
+def budget_vs_actual_view(request):
+    
+    budgets = Budget.objects.filter(
+        user=request.user,
+        start_date__lte=datetime.now(),
+        end_date__gte=datetime.now()
+    )
+    
+    budget_vs_actual = []
+
+    for budget in budgets:
+        actual_spending = Expense.objects.filter(
+            user=request.user, 
+            category__name=budget.category,  # Assuming Expense has a ForeignKey to Category
+            date__range=[budget.start_date, budget.end_date]
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        budget_vs_actual.append({
+            'category': budget.category.name,  # Ensure this is a string
+            'budgeted': float(budget.amount),
+            'actual': float(actual_spending),
+    })
+
+    # Serialize your context data using DjangoJSONEncoder and mark it safe for the template
+    context = {
+        'budget_vs_actual': json.dumps(budget_vs_actual, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'financebuddyweb/budget_vs_actual.html', context)
+
     
 class FinancialGoalCreateView(LoginRequiredMixin, CreateView):
     model = FinancialGoal
@@ -219,3 +267,32 @@ class BillUpdateView(UpdateView):
     model = Bill
     form_class = BillForm
     success_url = reverse_lazy('bill_list')
+    
+@login_required
+def add_income(request):
+    if request.method == 'POST':
+        form = IncomeForm(request.POST)
+        if form.is_valid():
+            income = form.save(commit=False)
+            income.user = request.user
+            income.save()
+            return redirect('income_list')
+    else:
+        form = IncomeForm()
+    return render(request, 'financebuddyweb/add_income.html', {'form': form})
+
+@login_required
+def income_list(request):
+    incomes = Income.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'financebuddyweb/income_list.html', {'incomes': incomes})
+
+class IncomeUpdateView(UpdateView):
+    model = Income
+    fields = ['source', 'amount', 'date', 'description']
+    template_name = 'financebuddyweb/edit_income.html'
+    success_url = reverse_lazy('income_list') 
+
+class IncomeDeleteView(DeleteView):
+    model = Income
+    template_name = 'financebuddyweb/confirm_delete.html'
+    success_url = reverse_lazy('income_list')  

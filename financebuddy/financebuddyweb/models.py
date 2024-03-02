@@ -12,6 +12,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+class Source(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -24,7 +32,7 @@ class Expense(models.Model):
 
 class Budget(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='budgets')
-    category = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -77,3 +85,14 @@ class Reminder(models.Model):
         for bill in upcoming_bills:
             reminder_date = bill.due_date - timezone.timedelta(days=3)  # Example: Reminder 3 days before due date
             Reminder.objects.create(user=bill.user, bill=bill, reminder_date=reminder_date)
+            
+            
+class Income(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='incomes')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    source = models.ForeignKey(Source, on_delete=models.SET_NULL, null=True)
+    date = models.DateField()
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.source}: ${self.amount} on {self.date}"

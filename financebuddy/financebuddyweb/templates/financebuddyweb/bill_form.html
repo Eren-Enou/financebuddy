@@ -1,0 +1,10 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+  <h2>{% if form.instance.pk %}Edit Bill{% else %}Add Bill{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

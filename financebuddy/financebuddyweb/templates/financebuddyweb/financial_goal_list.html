@@ -1,0 +1,21 @@
+{% extends 'financebuddyweb/base.html' %}  <!-- Ensure this path is correct based on your project structure -->
+
+{% block content %}
+<h2>Financial Goals</h2>
+<div class="list-group">
+    {% for goal in financial_goals %}
+    <div class="list-group-item">
+        <h5 class="mb-1">{{ goal.name }}</h5>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{ goal.progress_percentage }}%;" aria-valuenow="{{ goal.current_amount }}" aria-valuemin="0" aria-valuemax="{{ goal.target_amount }}">
+                ${{ goal.current_amount }} / ${{ goal.target_amount }}
+            </div>
+        </div>
+        <small>Completion Date: {{ goal.completion_date|date:"Y-m-d" }}</small>  <!-- Optional: Format date -->
+        <a href="{% url 'financial_goal_edit' goal.pk %}" class="btn btn-sm btn-primary">Edit</a>
+        <a href="{% url 'financial_goal_delete' goal.pk %}" class="btn btn-sm btn-danger">Delete</a>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'financial_goal_add' %}" class="btn btn-primary">Add New Goal</a>
+{% endblock %}

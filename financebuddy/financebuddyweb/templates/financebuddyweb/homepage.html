@@ -1,0 +1,40 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<div class="container">
+    {% if user.is_authenticated %}
+        <div class="row">
+            <div class="col">
+                <h2>Hello, {{ user.username }}!</h2>
+                <p>Welcome to Finance Buddy Web. Here you can manage your expenses, view expense summaries, and much more.</p>
+                <!-- Add more information about app functionality here -->
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <!-- Login Form -->
+            <div class="col">
+                <h2>Login</h2>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Log In</button>
+                </form>
+            </div>
+            
+            <!-- Sign-up Form -->
+            <div class="col">
+                <h2>Sign Up</h2>
+                <form method="post" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

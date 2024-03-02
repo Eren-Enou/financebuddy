@@ -1,0 +1,10 @@
+<!-- financebuddyweb/templates/financebuddyweb/logout.html -->
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>Logged Out</h2>
+    <p>Thank you for using the service. We hope to see you again soon!</p>
+    <a href="{% url 'homepage' %}" class="btn btn-primary">Return to Homepage</a>
+</div>
+{% endblock %}

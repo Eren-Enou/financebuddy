@@ -1,0 +1,16 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+  <h2>Expenses List</h2>
+  <ul>
+    {% for expense in expenses %}
+      <li>
+        {{ expense.date }}: {{ expense.category }} - ${{ expense.amount }}
+        <a href="{% url 'edit_expense' expense.pk %}">Edit</a> |
+        <a href="{% url 'delete_expense' expense.pk %}" onclick="return confirm('Are you sure?');">Delete</a>
+      </li>
+    {% empty %}
+      <li>No expenses found.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

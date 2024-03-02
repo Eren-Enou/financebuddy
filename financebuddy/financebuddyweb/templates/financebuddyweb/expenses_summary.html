@@ -1,0 +1,21 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+  <h2>Expenses Summary by Category</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Total Expenses</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in expenses_by_category %}
+        <tr>
+          <td>{{ expense.category__name }}</td>
+          <td>${{ expense.total }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

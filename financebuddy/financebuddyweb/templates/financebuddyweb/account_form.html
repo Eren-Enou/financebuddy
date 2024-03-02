@@ -1,0 +1,10 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<h2>Add New Account</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add Account</button>
+</form>
+{% endblock %}

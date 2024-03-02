@@ -1,0 +1,12 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+  <h1>Bill List</h1>
+  <ul>
+    {% for bill in object_list %}
+      <li>{{ bill.name }} - ${{ bill.amount }} - Due: {{ bill.due_date }}</li>
+    {% empty %}
+      <li>No bills yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

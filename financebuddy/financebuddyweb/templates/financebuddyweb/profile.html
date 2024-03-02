@@ -1,0 +1,12 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<h2>User Profile</h2>
+<p>Welcome, {{ user.username }}!</p>
+
+<ul>
+    <li><a href="{% url 'add_expense' %}">Add New Expense</a></li>
+    <li><a href="{% url 'expenses_list' %}">View Expenses List</a></li>
+    <li><a href="{% url 'expenses_summary' %}">View Expenses Summary</a></li>
+</ul>
+{% endblock %}

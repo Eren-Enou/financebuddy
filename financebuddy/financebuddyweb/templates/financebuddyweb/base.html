@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Finance Buddy Web</title>
+    <!-- Bootstrap CSS (You can update the version as needed) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Additional CSS files can be included here -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Example for custom CSS -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'homepage' %}">Finance Buddy Web</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <!-- Dropdown for Expenses -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExpenses" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Expenses
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownExpenses">
+                            <a class="dropdown-item" href="{% url 'add_expense' %}">Add Expense</a>
+                            <a class="dropdown-item" href="{% url 'expenses_list' %}">View Expenses</a>
+                            <a class="dropdown-item" href="{% url 'expenses_summary' %}">Expenses Summary</a>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown for Budgets -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBudgets" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Budgets
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownBudgets">
+                            <a class="dropdown-item" href="{% url 'budget_add' %}">Add Budget</a>
+                            <a class="dropdown-item" href="{% url 'budget_list' %}">View Budgets</a>
+                            <!-- Add more budget-related links here -->
+                        </div>
+                    </li>
+
+                    <!-- Dropdown for Financial Goals -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFinancialGoals" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Financial Goals
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownFinancialGoals">
+                            <a class="dropdown-item" href="{% url 'financial_goal_add' %}">Add Goal</a>
+                            <a class="dropdown-item" href="{% url 'financial_goal_list' %}">View Goals</a>
+                            <!-- You can add more financial goal-related links here, such as editing or deleting goals -->
+                        </div>
+                    </li>
+
+                    <!-- Dropdown for Bills -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBills" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Bills
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownBills">
+                            <a class="dropdown-item" href="{% url 'bill_add' %}">Add Bill</a>
+                            <a class="dropdown-item" href="{% url 'bill_list' %}">View Bills</a>
+                            <!-- Add additional dropdown items as needed -->
+                        </div>
+                    </li>
+
+
+
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
+                {% endif %}
+                <!-- Additional navigation items can be added here -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}
+        <!-- Page specific content will be inserted here -->
+        {% endblock %}
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Additional JavaScript files can be included here -->
+</body>
+</html>

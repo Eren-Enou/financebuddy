@@ -1,0 +1,15 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+  <h2>Your Budgets</h2>
+  <a href="{% url 'budget_add' %}">Add New Budget</a>
+  <ul>
+    {% for budget in budgets %}
+      <li>
+        {{ budget.category }}: ${{ budget.amount }} from {{ budget.start_date }} to {{ budget.end_date }}
+        <a href="{% url 'edit_budget' budget.pk %}">Edit</a> |
+        <a href="{% url 'delete_budget' budget.pk %}">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'financebuddyweb/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Dashboard</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Total Savings: ${{ total_savings }}</h3>
+            <h4>Upcoming Bills</h4>
+            {% for bill in upcoming_bills %}
+                <p>{{ bill.name }}: ${{ bill.amount }} due {{ bill.due_date }}</p>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h4>Accounts</h4>
+            {% for account in accounts %}
+            <p>{{ account.name }}: ${{ account.balance }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <h4>Recent Expenses</h4>
+            <ul>
+            {% for expense in recent_expenses %}
+                <li>{{ expense.date }}: {{ expense.category }} - ${{ expense.amount }}</li>
+            {% endfor %}
+            </ul>
+
+            <h4>Financial Goals</h4>
+            <ul>
+            {% for goal in financial_goals %}
+                <li>{{ goal.name }}: ${{ goal.current_amount }} / ${{ goal.target_amount }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
